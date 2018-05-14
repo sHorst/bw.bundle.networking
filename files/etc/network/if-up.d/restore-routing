@@ -1,0 +1,3 @@
+#!/bin/sh
+/usr/local/sbin/routes-enforce
+exit 0

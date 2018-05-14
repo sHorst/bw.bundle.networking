@@ -1,0 +1,7 @@
+#!/bin/sh
+
+% for route in node.metadata.get('routes', []):
+ip route add ${route}
+% endfor
+
+exit 0 # OpenVPN dies if there is any other exit code
