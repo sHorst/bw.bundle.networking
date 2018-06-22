@@ -16,6 +16,10 @@ iface ${interface} ${config.get('type', "inet static")}
     % if 'gateway' in node.metadata['interfaces'][interface]:
   gateway ${node.metadata['interfaces'][interface]['gateway']}
     % endif
+  % for ip_address in node.metadata['interfaces'][interface]['ip_addresses'][1:]:
+  up ip addr add ${ip_address}/${node.metadata['interfaces'][interface].get('netmask', "255.255.255.0")} dev ${interface}
+  down ip addr del ${ip_address}/${node.metadata['interfaces'][interface].get('netmask', "255.255.255.0")} dev ${interface}
+  % endfor
 % else:
 iface ${interface} ${config.get('type', "")}
 % endif
