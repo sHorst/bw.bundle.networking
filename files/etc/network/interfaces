@@ -28,12 +28,15 @@ iface ${interface} ${config.get('type', "")}
 % endfor
 
   % if config.get('ipv6_addresses', []):
-iface ${interface} ${config.get('type', "inet6 static")}
+iface ${interface} ${config.get('ipv6_type', 'inet6 static')}
   address ${node.metadata['interfaces'][interface]['ipv6_addresses'][0]}
   netmask ${node.metadata['interfaces'][interface].get('ipv6_netmask', "64")}
       % if 'ipv6_gateway' in node.metadata['interfaces'][interface]:
   gateway ${node.metadata['interfaces'][interface]['ipv6_gateway']}
       % endif
+% for ip6_option in config.get('ipv6_options', []):
+  ${ip6_option}
+% endfor
   % endif
 
 % endfor

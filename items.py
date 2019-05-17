@@ -1,9 +1,3 @@
-pkg_apt = {
-    "resolvconf": {
-        'installed': False,
-    },
-}
-
 actions = {
     'routes-enforce': {
         'command': "/usr/local/sbin/routes-enforce",
