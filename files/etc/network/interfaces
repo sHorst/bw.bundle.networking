@@ -9,6 +9,9 @@ config = node.metadata['interfaces'][interface]
 % if config.get('auto', True):
 auto ${interface}
 % endif
+% if config.get('type', 'inet static') == 'inet dhcp':
+iface ${interface} inet dhcp
+% else:
 % if config.get('ip_addresses', []):
 iface ${interface} ${config.get('type', "inet static")}
   address ${node.metadata['interfaces'][interface]['ip_addresses'][0]}
@@ -22,6 +25,7 @@ iface ${interface} ${config.get('type', "inet static")}
   % endfor
 % else:
 iface ${interface} ${config.get('type', "")}
+% endif
 % endif
 % for option in config.get('options', []):
   ${option}
