@@ -1,3 +1,5 @@
+global node
+
 actions = {
     'routes-enforce': {
         'command': "/usr/local/sbin/routes-enforce",
@@ -13,13 +15,6 @@ files = {
         'mode': "0644",
         'owner': "root",
         'group': "root",
-    },
-    "/etc/resolv.conf": {
-        'content_type': 'mako',
-        'mode': "0644",
-        'owner': "root",
-        'group': "root",
-        'source': "etc/resolv.conf",
     },
     "/usr/local/sbin/routes-enforce": {
         'source': "usr/local/sbin/routes-enforce",
@@ -39,3 +34,26 @@ files = {
     }
 }
 
+if node.os in node.OS_FAMILY_DEBIAN and node.os_version[0] > 10:
+    files["/etc/resolvconf/resolv.conf.d/base"] = {
+        'content_type': 'mako',
+        'mode': "0644",
+        'owner': "root",
+        'group': "root",
+        'source': "etc/resolv.conf",
+        'triggers': [
+            "action:reload_resolvconf",
+        ],
+    }
+    actions["reload_resolvconf"] = {
+        "command": "resolvconf -u",
+        "triggered": True,
+    }
+else:
+    files["/etc/resolv.conf"] = {
+        'content_type': 'mako',
+        'mode': "0644",
+        'owner': "root",
+        'group': "root",
+        'source': "etc/resolv.conf",
+    }
