@@ -14,14 +14,13 @@ iface ${interface} inet dhcp
 % else:
 % if config.get('ip_addresses', []):
 iface ${interface} ${config.get('type', "inet static")}
-  address ${node.metadata['interfaces'][interface]['ip_addresses'][0]}
-  netmask ${node.metadata['interfaces'][interface].get('netmask', "255.255.255.0")}
+  address ${node.metadata['interfaces'][interface]['ip_addresses_prefix'][0]}
     % if 'gateway' in node.metadata['interfaces'][interface]:
   gateway ${node.metadata['interfaces'][interface]['gateway']}
     % endif
-  % for ip_address in node.metadata['interfaces'][interface]['ip_addresses'][1:]:
-  up ip addr add ${ip_address}/${node.metadata['interfaces'][interface].get('netmask', "255.255.255.0")} dev ${interface}
-  down ip addr del ${ip_address}/${node.metadata['interfaces'][interface].get('netmask', "255.255.255.0")} dev ${interface}
+  % for ip_address in node.metadata['interfaces'][interface]['ip_addresses_prefix'][1:]:
+  up ip addr add ${ip_address} dev ${interface}
+  down ip addr del ${ip_address} dev ${interface}
   % endfor
 % else:
 iface ${interface} ${config.get('type', "")}
