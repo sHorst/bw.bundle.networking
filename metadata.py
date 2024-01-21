@@ -1,3 +1,5 @@
+import ipaddress
+
 defaults = {}
 if node.has_bundle("apt"):
     defaults = {
@@ -32,15 +34,8 @@ def rewrite_ip_addresses_with_prefix(metadata):
             if len(ip.split("/")) == 2:
                 ip_addresses_prefix += [str(ip)]
             else:
-                ip_addresses_prefix += ["{}/{}".format(
-                    _network_address_ipv4(
-                        ip,
-                        interface_config.get('netmask', "255.255.255.0"),
-                    ),
-                    _prefix_length_ipv4(
-                        interface_config.get('netmask', "255.255.255.0"),
-                    ),
-                )]
+                ip_addresses_prefix += [str(
+                    ipaddress.IPv4Interface(f"{ip}/{interface_config.get('netmask', '255.255.255.0')}").with_prefixlen)]
 
         interfaces = {
             interface_name: {
