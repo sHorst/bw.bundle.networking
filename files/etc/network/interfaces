@@ -9,6 +9,9 @@ config = node.metadata['interfaces'][interface]
 % if config.get('auto', True):
 auto ${interface}
 % endif
+% if config.get('allow-hotplug', False):
+allow-hotplug ${interface}
+% endif
 % if config.get('type', 'inet static') == 'inet dhcp':
 iface ${interface} inet dhcp
 % else:
