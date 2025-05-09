@@ -34,6 +34,8 @@ files = {
     }
 }
 
+symlinks = {}
+
 if node.os in node.OS_FAMILY_DEBIAN and node.os_version[0] > 10:
     files["/etc/resolvconf/resolv.conf.d/base"] = {
         'content_type': 'mako',
@@ -49,6 +51,17 @@ if node.os in node.OS_FAMILY_DEBIAN and node.os_version[0] > 10:
         "command": "resolvconf -u",
         "triggered": True,
     }
+
+    # make sure, the old system did not override the symlink
+    symlinks["/etc/resolv.conf"] = {
+        "target": '../run/resolvconf/resolv.conf',
+        "group": "root",
+        "owner": "root",
+        'triggers': [
+            "action:reload_resolvconf",
+        ],
+    }
+
 else:
     files["/etc/resolv.conf"] = {
         'content_type': 'mako',
